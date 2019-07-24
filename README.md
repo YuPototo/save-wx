@@ -1,29 +1,15 @@
 # save_wx
 
-## Project setup
+使用框架：[uni-app](https://uniapp.dcloud.io/)
+
+### install
+
 ```
-yarn install
+yarn add
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+### 运行微信小程序
 
-### Compiles and minifies for production
 ```
-yarn run build
+npm run dev:mp-weixin
 ```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
