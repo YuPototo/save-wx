@@ -18,10 +18,9 @@
       </view>
       <view v-if="savingType==='buyCheap'" class="add-saving-cheap">
         <view class="want-buy">
-          <text>原商品</text>
           <view class="want-buy-name">
             <label for="want-buy-name">商品</label>
-            <inputtype="text" id="want-buy-name" v-model="wantBuy.name">
+            <input type="text" id="want-buy-name" v-model="wantBuy.name">
           </view>
           <view class="want-buy-cost">
             <label for="want-buy-cost">价格</label>
@@ -29,9 +28,8 @@
           </view>
         </view>
         <view class="did-buy">
-          <text>替代品</text>
           <view class="did-buy-name">
-            <label for="did-buy-name">商品</label>
+            <label for="did-buy-name">替代品</label>
             <input type="text" id="did-buy-name" v-model="didBuy.name">
           </view>
           <view class="did-buy-cost">
