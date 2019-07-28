@@ -4,33 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const state = {
-  savings: [
-    {
-      wantBuy: {
-        name: '可乐',
-        cost: 5
-      },
-      time: 1563954662
-    },
-    {
-      wantBuy: {
-        name: '星巴克',
-        cost: 30
-      },
-      didBuy: {
-        name: '全家咖啡',
-        cost: 5
-      },
-      time: 1563954665
-    },
-    {
-      wantBuy: {
-        name: '盒饭',
-        cost: 8
-      },
-      time: 1563580800
-    }
-  ]
+  savings: []
 };
 
 export default new Vuex.Store({
@@ -45,6 +19,7 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    SET_SAVING: (state, savings) => state.savings = savings,
     ADD_SAVING: (state, saving) => state.savings.unshift(saving),
     EDIT_SAVING: (state, savingToEdit) => {
       const index = state.savings.findIndex(
@@ -56,14 +31,96 @@ export default new Vuex.Store({
     },
     REMOVE_SAVING: (state, savingToDelete) => {
       const index = state.savings.findIndex(
-        saving => saving.time === savingToDelete.time
+        saving => saving.time == savingToDelete.time
       );
-      state.savings.splice(index, 1);
+      if (index !== -1) {
+        state.savings.splice(index, 1);
+      }
     }
   },
   actions: {
-    addSaving: (context, saving) => context.commit("ADD_SAVING", {...saving, time:Date.now()} ),
-    editSaving: (context, saving) => context.commit("EDIT_SAVING", saving),
-    removeSaving: (context, saving) => context.commit("REMOVE_SAVING", saving)
+    fetchSavings({commit}) {
+      console.log('fetch saving called')
+      const request = uni.request({
+        url: 'http://localhost:3000/qinyu',
+        success: (res) => {
+          if (res.statusCode == 200) {
+            commit('SET_SAVING', res.data.savings)
+          }
+        }
+      })
+    },
+    addSaving({commit}, saving) {
+      const newSaving = {...saving, time:Date.now()}
+      const newSavings = _.cloneDeep(state.savings)
+      newSavings.unshift(newSaving)
+      const data = {
+        username: 'qinyu',
+        savings: newSavings
+      }
+      const request = uni.request({
+        url: 'http://localhost:3000/',
+        method: 'POST',
+        header: {
+          'content-type': 'application/json', 
+        },
+        data: data,
+        success: (res) => {
+          if (res.statusCode == 200) {
+            commit('ADD_SAVING', newSaving)
+          }
+        }
+      })
+    },
+    editSaving({commit}, savingToEdit) {
+      const newSavings = _.cloneDeep(state.savings)
+      const index = newSavings.findIndex(
+        saving => saving.time == savingToEdit.time
+      );
+      if (index !== -1) {
+        newSavings.splice(index, 1, savingToEdit);
+      }
+      const data = {
+        username: 'qinyu',
+        savings: newSavings
+      }
+      const request = uni.request({
+        url: 'http://localhost:3000/',
+        method: 'POST',
+        header: {
+          'content-type': 'application/json', 
+        },
+        data: data,
+        success: (res) => {
+          if (res.statusCode == 200) {
+            commit('EDIT_SAVING', savingToEdit)
+          }
+        }
+      })
+    },
+    removeSaving({commit}, savingToDelete) {
+      const newSavings = _.cloneDeep(state.savings)
+      let index = newSavings.findIndex(
+        saving => saving.time === savingToDelete.time
+      )
+      newSavings.splice(index, 1)
+      const data =  {
+        username: 'qinyu', 
+        savings: newSavings
+      }
+      const request = uni.request({
+        url: 'http://localhost:3000/',
+        method: 'POST',
+        header: {
+          'content-type': 'application/json', 
+        },
+        data: data,
+        success: (res) => {
+          if (res.statusCode == 200) {
+            commit('REMOVE_SAVING', savingToDelete)
+          }
+        }
+      })
+    }
   }
 });

@@ -1,16 +1,16 @@
 <template>
 <view>
     <view>
-    <label for="want-buy-name">商品<input type="text" id="want-buy-name" v-model="savingEdited.wantBuy.name"></label>
-      <label for="want-buy-cost">价格<input type="number" id="want-buy-cost" v-model.number="savingEdited.wantBuy.cost" /></label>
+    <label for="want-buy-name">商品<input type="text" id="want-buy-name" v-model="savingToEdit.wantBuy.name"></label>
+      <label for="want-buy-cost">价格<input type="number" id="want-buy-cost" v-model.number="savingToEdit.wantBuy.cost" /></label>
       </view>
       <view v-if="savingType==='buyCheap'">
-        <label for="want-buy-name">替代品<input type="text" id="want-buy-name" v-model="savingEdited.didBuy.name"></label>
-        <label for="want-buy-cost">价格<input type="number" id="want-buy-cost" v-model.number="savingEdited.didBuy.cost" /></label>
+        <label for="want-buy-name">替代品<input type="text" id="want-buy-name" v-model="savingToEdit.didBuy.name"></label>
+        <label for="want-buy-cost">价格<input type="number" id="want-buy-cost" v-model.number="savingToEdit.didBuy.cost" /></label>
       </view>
 
-      <button @click="clickEdit(savingEdited)">确定修改</button>
-      <button @click="clickDelete(savingEdited)">删除</button>
+      <button @click="clickEdit(savingToEdit)">确定修改</button>
+      <button @click="clickDelete(savingToEdit)">删除</button>
     </view>
 </template>
 
@@ -21,12 +21,12 @@ import { mapActions } from 'vuex'
 export default {
   data () {
     return {
-      savingEdited: {},
+      savingToEdit: {},
     }
   },
   computed: {
     savingType () {
-      return 'didBuy' in this.savingEdited ? 'buyCheap' : 'buyNone';
+      return 'didBuy' in this.savingToEdit ? 'buyCheap' : 'buyNone';
     }
   },
   methods: {
@@ -50,7 +50,7 @@ export default {
   onLoad(option) {
     const time = Number.parseInt(option.time)
     const saving = this.$store.state.savings.filter(saving => saving.time === time)[0]
-    this.savingEdited = _.cloneDeep(saving)
+    this.savingToEdit = _.cloneDeep(saving)
   }
 }
 </script>

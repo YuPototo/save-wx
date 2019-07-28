@@ -1,6 +1,8 @@
 <script>
 	export default {
-
+    beforeCreate() {
+      this.$store.dispatch('fetchSavings')
+    }
 	}
 </script>
 

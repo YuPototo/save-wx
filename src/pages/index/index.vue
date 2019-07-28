@@ -1,8 +1,8 @@
 <template>
 	<view>
 		<radio-group @change="pickSavingType">
-			<radio value="buyNone" id="buy-none"/><label for="buy-none">不买了</label>
-			<radio value="buyCheap" id="buy-cheap"/><label for="buy-cheap">买便宜的</label>
+			<radio value="buyNone" id="buy-none" :checked="savingType === 'buyNone'"/><label for="buy-none">不买了</label>
+			<radio value="buyCheap" id="buy-cheap" :checked="savingType === 'buyCheap'"/><label for="buy-cheap">买便宜的</label>
 		</radio-group>
 		
 		<form>
@@ -63,10 +63,10 @@ export default {
   methods: {
     ...mapActions([
       'addSaving'
-	]),
-	pickSavingType(e) {
-		this.savingType = e.detail.value;
-	},
+	  ]),
+	  pickSavingType(e) {
+		  this.savingType = e.detail.value;
+	  },
     onClickAdd () {
       const saving = { wantBuy: { ...this.wantBuy } };
       if (this.didBuy.name !== null) saving.didBuy = { ...this.didBuy };
@@ -81,11 +81,10 @@ export default {
       this.didBuy = { name: null, cost: null };
     },
     onLoad() {
-      /*  用于开发时的调试
+      /* 用于开发时的调试 */
 			uni.navigateTo({
             url: '../record/record'
-        });   
-      */
+        });
 		}
   }
 }
