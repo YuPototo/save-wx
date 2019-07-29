@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 Vue.use(Vuex);
 
 const state = {
+  username: "",
   savings: []
 };
 
@@ -39,18 +40,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    fetchSavings({commit}) {
-      console.log('fetch saving called')
-      const request = uni.request({
-        url: 'http://localhost:3000/qinyu',
-        success: (res) => {
-          if (res.statusCode == 200) {
-            commit('SET_SAVING', res.data.savings)
-          }
-        }
+    async fetchSavings({commit}) {
+      let [error, res] = await uni.request({
+          url: 'http://localhost:3000/qinyu'
       })
+      commit('SET_SAVING', res.data.savings)
     },
-    addSaving({commit}, saving) {
+    async addSaving({commit}, saving) {
       const newSaving = {...saving, time:Date.now()}
       const newSavings = _.cloneDeep(state.savings)
       newSavings.unshift(newSaving)
@@ -58,21 +54,17 @@ export default new Vuex.Store({
         username: 'qinyu',
         savings: newSavings
       }
-      const request = uni.request({
+      await uni.request({
         url: 'http://localhost:3000/',
         method: 'POST',
         header: {
           'content-type': 'application/json', 
         },
-        data: data,
-        success: (res) => {
-          if (res.statusCode == 200) {
-            commit('ADD_SAVING', newSaving)
-          }
-        }
+        data: data
       })
+      commit('ADD_SAVING', newSaving)
     },
-    editSaving({commit}, savingToEdit) {
+    async editSaving({commit}, savingToEdit) {
       const newSavings = _.cloneDeep(state.savings)
       const index = newSavings.findIndex(
         saving => saving.time == savingToEdit.time
@@ -84,21 +76,17 @@ export default new Vuex.Store({
         username: 'qinyu',
         savings: newSavings
       }
-      const request = uni.request({
+      await uni.request({
         url: 'http://localhost:3000/',
         method: 'POST',
         header: {
           'content-type': 'application/json', 
         },
-        data: data,
-        success: (res) => {
-          if (res.statusCode == 200) {
-            commit('EDIT_SAVING', savingToEdit)
-          }
-        }
+        data: data
       })
+      commit('EDIT_SAVING', savingToEdit)
     },
-    removeSaving({commit}, savingToDelete) {
+    async removeSaving({commit}, savingToDelete) {
       const newSavings = _.cloneDeep(state.savings)
       let index = newSavings.findIndex(
         saving => saving.time === savingToDelete.time
@@ -108,19 +96,15 @@ export default new Vuex.Store({
         username: 'qinyu', 
         savings: newSavings
       }
-      const request = uni.request({
+      await uni.request({
         url: 'http://localhost:3000/',
         method: 'POST',
         header: {
           'content-type': 'application/json', 
         },
-        data: data,
-        success: (res) => {
-          if (res.statusCode == 200) {
-            commit('REMOVE_SAVING', savingToDelete)
-          }
-        }
+        data: data
       })
+      commit('REMOVE_SAVING', savingToDelete)
     }
   }
 });
